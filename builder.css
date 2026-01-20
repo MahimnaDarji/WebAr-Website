@@ -1,0 +1,545 @@
+:root{
+  /* Base */
+  --bg: #f4f1ea;          /* warm paper */
+  --surface: #ffffff;     /* panels */
+  --ink: #171717;         /* near-black text */
+  --muted: #5b5b5b;       /* muted text */
+  --line: #d8d2c6;        /* warm border */
+  --shadow: rgba(18, 18, 18, 0.08);
+
+  /* Accents */
+  --accent: #8a6a2f;      /* brass */
+  --accent-weak: rgba(138, 106, 47, 0.18);
+
+  /* Status */
+  --danger: #b42318;      /* muted red */
+  --warning: #a15c00;     /* amber-brown */
+  --ok: #1f6f5b;          /* deep teal-green */
+
+  /* Controls */
+  --btn: #1f1f1f;         /* charcoal */
+  --btnText: #f7f3ea;     /* warm off-white */
+  --btnHover: #2a2a2a;
+
+  /* Preview default ratio (used when no content yet) */
+  --preview-ratio: 4 / 3;
+}
+
+*{ box-sizing:border-box; }
+
+html, body{ height:100%; }
+
+body{
+  margin:0;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+/* Force form controls to use same font */
+button, input, select, textarea{
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Header */
+.appHeader{
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.brandTitle{
+  font-weight:700;
+  font-size:16px;
+  line-height:1.2;
+}
+
+.brandSub{
+  margin-top:4px;
+  font-size:12px;
+  color: var(--muted);
+}
+
+.headerMeta{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.tag{
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  color: var(--muted);
+  background: #fbf8f2;
+}
+
+/* Container */
+.container{
+  max-width:1100px;
+  margin:0 auto;
+  padding:18px 18px 26px;
+}
+
+/* Step bar */
+.stepBar{
+  display:grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap:10px;
+  margin: 10px 0 16px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 10px 26px var(--shadow);
+}
+
+.step{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:12px;
+  border:1px solid transparent;
+
+  /* FIX: remove default anchor underline + link coloring */
+  text-decoration: none;
+  color: inherit;
+}
+
+/* FIX: kill underline in all link states */
+.step:hover,
+.step:focus,
+.step:active,
+.step:visited{
+  text-decoration: none;
+  color: inherit;
+}
+
+.step .dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background: #c9c1b4;
+}
+
+.step .title{
+  font-size:12px;
+  color: var(--muted);
+  font-weight:600;
+  line-height:1.1;
+}
+
+.step .desc{
+  font-size:12px;
+  color: var(--ink);
+  font-weight:600;
+  line-height:1.1;
+  opacity:0.85;
+}
+
+.step.active{
+  border-color: var(--line);
+  background: #fbf8f2;
+}
+
+.step.active .dot{ background: var(--accent); }
+.step.active .title{ color: var(--accent); }
+
+.step.completed{
+  background: #f2ede3;
+  border-color: var(--line);
+}
+
+.step.completed .dot{ background: var(--ok); }
+.step.completed .title{ color: var(--ok); }
+
+/* Status box refinement for step 2 */
+.statusBox .status{
+  margin-top:10px;
+  font-size:12px;
+  line-height:1.45;
+  color: var(--muted);
+}
+
+/* Layout panels */
+.layout{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:16px;
+}
+
+.panel{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 28px var(--shadow);
+}
+
+.panelHead h2{
+  margin:0;
+  font-size:15px;
+  font-weight:700;
+}
+
+.panelHead p{
+  margin:6px 0 0;
+  font-size:12px;
+  color: var(--muted);
+  line-height:1.5;
+}
+
+.muted{ color: var(--muted); }
+
+.note{
+  margin-top:12px;
+  font-size:11px;
+  line-height:1.45;
+  color: var(--muted);
+}
+
+/* Upload block */
+.uploadBlock{
+  margin-top:14px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  border:1px dashed var(--line);
+  border-radius: 14px;
+  background: #fbf8f2;
+}
+
+.fileLabel{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background: var(--surface);
+  cursor:pointer;
+  min-width:160px;
+}
+
+.fileLabelTitle{
+  font-weight:700;
+  font-size:13px;
+}
+
+.fileLabelHint{
+  font-size:11px;
+  color: var(--muted);
+}
+
+.fileInput{ width:100%; }
+
+/* File meta */
+.fileMeta{
+  margin-top:14px;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.metaRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom: 1px solid rgba(216, 210, 198, 0.55);
+}
+
+.metaRow:last-child{ border-bottom:none; }
+
+.metaKey{
+  font-size:12px;
+  color: var(--muted);
+  font-weight:600;
+}
+
+.metaVal{
+  font-size:12px;
+  font-weight:600;
+  color: var(--ink);
+}
+
+/* Buttons */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding:10px 12px;
+  border-radius:12px;
+  font-weight:700;
+  font-size:13px;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.btn:disabled{
+  opacity:0.55;
+  cursor:not-allowed;
+}
+
+.btn.primary{
+  background: var(--btn);
+  color: var(--btnText);
+  border-color: rgba(0,0,0,0.15);
+}
+
+.btn.primary:hover{ background: var(--btnHover); }
+
+.btn.secondary{
+  background: #fbf8f2;
+  color: var(--ink);
+}
+
+.btn.secondary:hover{ background: #f6f1e6; }
+
+.btn:active{ transform: translateY(1px); }
+
+/* Status */
+.status{
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:12px;
+  background: #fbf8f2;
+  border: 1px dashed var(--line);
+  font-size:12px;
+  color: var(--muted);
+}
+
+/* =========================
+   PREVIEW SYSTEM (NO OVERFIT)
+   ========================= */
+
+/* Base preview box: NO fixed height. Uses aspect ratio. */
+.previewBox{
+  margin-top:14px;
+  border-radius:14px;
+  border:1px dashed var(--line);
+  background:
+    linear-gradient(0deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02)),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0.03),
+      rgba(0,0,0,0.03) 10px,
+      rgba(0,0,0,0.01) 10px,
+      rgba(0,0,0,0.01) 20px
+    );
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+
+  /* This is the key: predictable scaling */
+  aspect-ratio: var(--preview-ratio);
+  min-height: 260px;
+}
+
+/* Images: never stretch, never crop */
+.previewBox img{
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  display:none;
+}
+
+/* Empty placeholder text */
+.emptyPreview{
+  font-size:12px;
+  color: var(--muted);
+  padding:14px;
+  text-align:center;
+}
+
+/* Video: never stretch */
+.previewBox video{
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  display:none; /* shown by JS when loaded */
+}
+
+/* Step 3 dedicated video frame (optional class on the previewBox)
+   Uses a more video-friendly ratio */
+.videoFrame{
+  aspect-ratio: 16 / 9;
+  min-height: 260px;
+}
+
+/* Score area */
+.scoreWrap{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 190px 1fr;
+  gap:12px;
+}
+
+.scoreCard, .barCard{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background: #ffffff;
+  padding:12px;
+}
+
+.scoreLabel{
+  font-size:12px;
+  color: var(--muted);
+  font-weight:700;
+}
+
+.scoreValue{
+  font-size:34px;
+  font-weight:800;
+  margin-top:6px;
+  letter-spacing:-0.5px;
+}
+
+.scoreText{
+  margin-top:6px;
+  font-size:12px;
+  line-height:1.4;
+}
+
+.barTrack{
+  height:14px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fbf8f2;
+  overflow:hidden;
+}
+
+.barFill{
+  height:100%;
+  width:0%;
+  background: var(--accent);
+}
+
+.barLegend{
+  margin-top:8px;
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+}
+
+/* Suggestions */
+.suggestWrap{ margin-top:14px; }
+
+.suggestWrap h3{
+  margin:0 0 8px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.suggestList{
+  margin:0;
+  padding-left:18px;
+  font-size:12.5px;
+  line-height:1.55;
+}
+
+.suggestList li{ margin:6px 0; }
+
+/* Footer */
+.footer{
+  margin-top:14px;
+  font-size:12px;
+  color: var(--muted);
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .layout{ grid-template-columns: 1fr; }
+  .scoreWrap{ grid-template-columns: 1fr; }
+  .stepBar{ grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* Lock preview stage behavior */
+.previewStage{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 360px;
+  overflow: hidden;
+}
+
+/* Simulated preview media must never stretch */
+.simMediaBox img,
+.simMediaBox video{
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* AR container must fill preview without distortion */
+.arWrap{
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+/* Force a-scene to respect container */
+.arWrap a-scene{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Prevent A-Frame canvas from stretching */
+.arWrap canvas{
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}
+
+/* Video texture inside AR must keep ratio */
+a-video{
+  object-fit: contain;
+}
+
+/* Mobile safety */
+@media (max-width: 900px){
+  .previewStage{
+    aspect-ratio: 9 / 16;
+    min-height: 420px;
+  }
+}
+
+#qrWrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  padding:14px;
+}
+
+#qrCanvas{
+  width: min(320px, 100%);
+  height: auto;
+  image-rendering: pixelated;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+}

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebAR Ad Builder | Step 2</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./builder.css" />
+</head>
+
+<body>
+  <header class="appHeader">
+    <div class="brand">
+      <div class="brandTitle">WebAR Ad Builder</div>
+      <div class="brandSub">Build a print ad that plays video on scan</div>
+    </div>
+
+    <div class="headerMeta">
+      <span class="tag">Builder</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stepBar" aria-label="Build steps">
+      <a class="step" href="./builder.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 1</div>
+          <div class="desc">Artwork</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step2page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 2</div>
+          <div class="desc">Tracking</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step3page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 3</div>
+          <div class="desc">Video</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step4page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 4</div>
+          <div class="desc">Preview</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step5page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 5</div>
+          <div class="desc">QR</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step6page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 6</div>
+          <div class="desc">Export</div>
+        </div>
+      </a>
+    </section>
+
+    <section class="layout">
+      <!-- LEFT -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>Artwork selected</h2>
+          <p class="muted">
+            This is the image that will be tracked by the camera.
+          </p>
+        </div>
+
+        <div class="previewBox">
+          <img id="artworkPreview" alt="Selected artwork" />
+          <div id="missingArtwork" class="emptyPreview">
+            No artwork found. Please go back to Step 1.
+          </div>
+        </div>
+
+        <div class="fileMeta">
+          <div class="metaRow">
+            <span class="metaKey">File</span>
+            <span id="metaFile" class="metaVal">-</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Resolution</span>
+            <span id="metaRes" class="metaVal">-</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Format</span>
+            <span id="metaType" class="metaVal">-</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="backToStep1Btn" class="btn secondary">Back to Step 1</button>
+        </div>
+
+        <div class="note muted">
+          If you change the artwork later, you must regenerate tracking data again.
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>Generate tracking data</h2>
+          <p class="muted">
+            This generates the MindAR target file used for image tracking.
+          </p>
+        </div>
+
+        <div class="statusBox">
+          <div id="trackingStatus" class="status">
+            Tracking data not generated yet.
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="generateBtn" class="btn primary" disabled>Generate target file</button>
+          <button id="downloadBtn" class="btn secondary" disabled>Download target (.mind)</button>
+        </div>
+
+        <div class="note muted">
+          This step will call the target generator and produce a real <b>.mind</b> file. No placeholders.
+        </div>
+
+        <div class="actions">
+          <button id="continueBtn" class="btn primary" disabled>Continue to Step 3</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- REQUIRED: dynamic step highlighting -->
+  <script src="./nav.js"></script>
+  <script src="./step2page.js"></script>
+</body>
+</html>

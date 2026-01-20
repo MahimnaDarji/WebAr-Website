@@ -1,0 +1,79 @@
+/* experience.css */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Background camera preview */
+#camPreview {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  background: #000;
+  z-index: 0;
+}
+
+/* AR layer */
+a-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Hint banner */
+.hint {
+  position: fixed;
+  left: 50%;
+  top: 18%;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  padding: 10px 16px;
+  border-radius: 12px;
+
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.3;
+
+  background: rgba(0, 0, 0, 0.55);
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.hint.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Optional status pill */
+.statusPill {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  padding: 8px 12px;
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+
+  background: rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.statusPill.hidden {
+  display: none;
+}

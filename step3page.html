@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebAR Ad Builder | Step 3</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./builder.css" />
+</head>
+
+<body>
+  <header class="appHeader">
+    <div class="brand">
+      <div class="brandTitle">WebAR Ad Builder</div>
+      <div class="brandSub">Build a print ad that plays video on scan</div>
+    </div>
+
+    <div class="headerMeta">
+      <span class="tag">Builder</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stepBar" aria-label="Build steps">
+      <a class="step" href="./builder.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 1</div>
+          <div class="desc">Artwork</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step2page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 2</div>
+          <div class="desc">Tracking</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step3page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 3</div>
+          <div class="desc">Video</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step4page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 4</div>
+          <div class="desc">Preview</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step5page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 5</div>
+          <div class="desc">QR</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step6page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 6</div>
+          <div class="desc">Export</div>
+        </div>
+      </a>
+    </section>
+
+    <section class="layout">
+      <!-- LEFT: Upload -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>Upload video</h2>
+          <p class="muted">
+            Upload a short MP4 video. Keep it under 10 to 15 seconds for better mobile performance.
+          </p>
+        </div>
+
+        <div class="uploadBlock">
+          <label class="fileLabel" for="videoInput">
+            <span class="fileLabelTitle">Choose video</span>
+            <span class="fileLabelHint">MP4 recommended</span>
+          </label>
+          <input id="videoInput" class="fileInput" type="file" accept="video/mp4,video/webm,video/quicktime" />
+        </div>
+
+        <div class="fileMeta">
+          <div class="metaRow">
+            <span class="metaKey">File</span>
+            <span id="metaFile" class="metaVal">None</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Size</span>
+            <span id="metaSize" class="metaVal">-</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Format</span>
+            <span id="metaType" class="metaVal">-</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Duration</span>
+            <span id="metaDuration" class="metaVal">-</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="optimizeBtn" class="btn primary" disabled>Save video</button>
+          <button id="clearBtn" class="btn secondary" disabled>Remove</button>
+        </div>
+
+        <div id="status" class="status">No video selected.</div>
+
+        <div class="note muted">
+          This step stores the video locally for preview and export. Compression will be added later.
+        </div>
+      </section>
+
+      <!-- RIGHT: Preview + checks -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>Preview and checks</h2>
+          <p class="muted">
+            Play the video here to confirm it looks right before AR preview.
+          </p>
+        </div>
+
+        <div class="previewBox videoFrame">
+          <video id="videoPreview" playsinline muted controls></video>
+          <div id="emptyPreview" class="emptyPreview">Video preview will appear here</div>
+        </div>
+
+        <div class="suggestWrap">
+          <h3>Warnings and suggestions</h3>
+          <ul id="suggestions" class="suggestList">
+            <li class="muted">No checks yet.</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <button id="backToStep2Btn" class="btn secondary">Back to Step 2</button>
+          <button id="continueBtn" class="btn primary" disabled>Continue to Step 4</button>
+        </div>
+
+        <div class="note muted">
+          Tip: Simple motion works best on top of a printed ad.
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- REQUIRED: dynamic active + completed step logic -->
+  <script src="./nav.js"></script>
+  <script src="./step3page.js"></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebAR Ad Builder | Step 5</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./builder.css" />
+</head>
+
+<body>
+  <header class="appHeader">
+    <div class="brand">
+      <div class="brandTitle">WebAR Ad Builder</div>
+      <div class="brandSub">Build a print ad that plays video on scan</div>
+    </div>
+
+    <div class="headerMeta">
+      <span class="tag">Builder</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stepBar" aria-label="Build steps">
+      <a class="step" href="./builder.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 1</div>
+          <div class="desc">Artwork</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step2page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 2</div>
+          <div class="desc">Tracking</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step3page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 3</div>
+          <div class="desc">Video</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step4page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 4</div>
+          <div class="desc">Preview</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step5page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 5</div>
+          <div class="desc">QR</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step6page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 6</div>
+          <div class="desc">Export</div>
+        </div>
+      </a>
+    </section>
+
+    <section class="layout">
+      <!-- LEFT: link setup -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>QR destination</h2>
+          <p class="muted">
+            This is the link your QR code will open. For the final version, QR opens the consumer page
+            (<b>experience.html</b>), not the builder.
+          </p>
+        </div>
+
+        <div class="fileMeta">
+          <div class="metaRow">
+            <span class="metaKey">Experience URL</span>
+            <span id="urlState" class="metaVal">Preparing...</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Mode</span>
+            <span id="modeState" class="metaVal">Publishable</span>
+          </div>
+        </div>
+
+        <div class="statusBox">
+          <div id="status" class="status">Loading...</div>
+        </div>
+
+        <div class="suggestWrap">
+          <h3>Print tips</h3>
+          <ul class="suggestList">
+            <li>Keep the QR at least 2 cm wide in print.</li>
+            <li>Leave quiet space around the QR (no text touching the edges).</li>
+            <li>Use strong contrast between QR and background.</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <button id="backToStep4Btn" class="btn secondary">Back to Step 4</button>
+          <button id="continueBtn" class="btn primary" disabled>Continue to Step 6</button>
+        </div>
+
+        <div class="note muted">
+          Step 6 will give you final export options (download QR, copy link, etc.).
+        </div>
+      </section>
+
+      <!-- RIGHT: QR output -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>QR code</h2>
+          <p class="muted">
+            Scan this QR on your phone. It should open <b>experience.html</b>.
+          </p>
+        </div>
+
+        <div class="previewBox" style="aspect-ratio: 1 / 1; min-height: 320px;">
+          <div id="qrWrap" style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; padding:14px;">
+            <div id="qrcode"></div>
+          </div>
+        </div>
+
+        <div class="fileMeta">
+          <div class="metaRow">
+            <span class="metaKey">QR data</span>
+            <span id="qrData" class="metaVal">-</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="downloadQrBtn" class="btn secondary" disabled>Download QR (PNG)</button>
+          <button id="openLinkBtn" class="btn primary" disabled>Open link</button>
+        </div>
+
+        <div class="note muted">
+          If you are on file mode, QR will not work. Use Live Server or hosting.
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- QRCode.js (the same library style you shared: new QRCode(...)) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- REQUIRED: dynamic active + completed step logic -->
+  <script src="./nav.js"></script>
+  <script src="./step5page.js"></script>
+</body>
+</html>

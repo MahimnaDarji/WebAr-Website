@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebAR Ad — Perfect Video Overlay</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html, body { margin: 0; height: 100%; background: #000; }
+    #camPreview{ position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; background:#000; }
+    a-scene{ position: fixed; inset: 0; z-index: 1; }
+    .hint{
+      position: fixed; left: 50%; top: 18%; transform: translateX(-50%);
+      z-index: 10; padding: 10px 16px; border-radius: 12px;
+      color:#fff; font: 700 20px/1.3 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: rgba(0,0,0,.5); text-shadow: 0 2px 3px rgba(0,0,0,.6);
+      pointer-events: none;
+      transition: opacity .2s ease, visibility .2s ease;
+    }
+    /* changed from display:none to smoother hide */
+    .hint.hidden{ opacity: 0; visibility: hidden; }
+
+    /* ADDED: status pill */
+    .statusPill{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 10;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(0,0,0,.55);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <video id="camPreview" autoplay playsinline muted></video>
+  <div id="hint" class="hint">Point your camera at your printed ad</div>
+
+  <!-- ADDED: status pill -->
+  <div id="statusPill" class="statusPill">Starting…</div>
+
+  <div id="arRoot"></div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const qs = new URLSearchParams(window.location.search);
+
+      const projectId = qs.get('projectId');
+      const mindSrc = qs.get('mind')  || (projectId ? `./projects/${projectId}/ad.mind` : './assets/ad.mind');
+      const imgSrc  = qs.get('img')   || (projectId ? `./projects/${projectId}/ad.png`  : './assets/ad.png');
+      const vidSrc  = qs.get('video') || (projectId ? `./projects/${projectId}/ad.mp4`  : './assets/ad.mp4');
+
+      // Inject the SAME scene markup (your senior's file), just swapping the paths.
+      const arRoot = document.getElementById('arRoot');
+      arRoot.innerHTML = `
+        <a-scene
+          mindar-image="imageTargetSrc: ${mindSrc};
+                        filterMinCF: 0.0005; filterBeta: 0.01; warmupTolerance: 5; missTolerance: 7"
+          color-space="sRGB"
+          renderer="alpha: true; colorManagement: true; physicallyCorrectLights: true; antialias: true"
+          vr-mode-ui="enabled: false"
+          device-orientation-permission-ui="enabled: false">
+
+          <a-assets>
+            <!-- ad.png is used to determine target aspect ratio -->
+            <img id="adImage" src="${imgSrc}" crossorigin="anonymous">
+            <video id="adVideo" src="${vidSrc}" preload="auto" playsinline webkit-playsinline muted loop crossorigin="anonymous"></video>
+          </a-assets>
+
+          <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
+
+          <!-- Anchor on the detected image. Children lie exactly on that plane. -->
+          <a-entity id="anchor" mindar-image-target="targetIndex: 0">
+            <a-plane id="videoPlane"
+                     material="shader: flat; src: #adVideo; side: double; transparent: false"
+                     position="0 0 0.001" rotation="0 0 0"
+                     width="1" height="1">
+            </a-plane>
+          </a-entity>
+        </a-scene>
+      `;
+
+      // Now run the original logic unchanged (only moved below because scene is injected).
+      const scene   = document.querySelector('a-scene');
+      const preview = document.getElementById('camPreview');
+      const hint    = document.getElementById('hint');
+      const statusPill = document.getElementById('statusPill'); // ADDED
+      const anchor  = document.getElementById('anchor');
+      const vPlane  = document.getElementById('videoPlane');
+      const adImg   = document.getElementById('adImage');
+      const video   = document.getElementById('adVideo');
+
+      // ADDED: tiny helper
+      function setStatus(text){
+        if (statusPill) statusPill.textContent = text;
+      }
+
+      // Attach MindAR camera to visible preview
+      function attachPreview(){
+        try{
+          const ms = scene.systems['mindar-image-system'];
+          const iv = ms && ms.video;
+          if (iv && iv.srcObject) {
+            preview.srcObject = iv.srcObject;
+
+            // ADDED: hide hint as soon as camera is live (your requirement)
+            hint.classList.add('hidden');
+            setStatus('Camera active. Point at the printed ad.');
+
+            return true;
+          }
+        }catch(e){}
+        return false;
+      }
+
+      const tryAttach = () => {
+        if (!attachPreview()) {
+          setStatus('Starting camera…');
+          setTimeout(tryAttach, 150);
+        }
+      };
+
+      scene.addEventListener('loaded', tryAttach);
+
+      // Get the material map for UV adjustments
+      function getMap(){
+        const mesh = vPlane.getObject3D('mesh');
+        return (mesh && mesh.material && mesh.material.map) ? mesh.material.map : null;
+      }
+
+      // Apply object-fit: cover behavior to video texture
+      function applyCoverUV(targetAspect, videoAspect){
+        const map = getMap();
+        if (!map) {
+          setTimeout(() => applyCoverUV(targetAspect, videoAspect), 50);
+          return;
+        }
+
+        // Reset UV mapping
+        map.center.set(0.5, 0.5);
+
+        if (videoAspect > targetAspect) {
+          // Video is wider than target - crop sides
+          const scale = targetAspect / videoAspect;
+          map.repeat.set(scale, 1);
+          map.offset.set((1 - scale) / 2, 0);
+        } else {
+          // Video is taller than target - crop top/bottom
+          const scale = videoAspect / targetAspect;
+          map.repeat.set(1, scale);
+          map.offset.set(0, (1 - scale) / 2);
+        }
+
+        map.needsUpdate = true;
+
+        // Disable frustum culling for better tracking
+        const mesh = vPlane.getObject3D('mesh');
+        if (mesh) {
+          mesh.frustumCulled = false;
+        }
+      }
+
+      // Get target aspect ratio from multiple sources
+      function getTargetAspect(){
+        let targetAspect = 16/9; // Default fallback
+
+        try {
+          // First, try to get from MindAR metadata
+          const ms = scene.systems['mindar-image-system'];
+          if (ms && ms.controller && ms.controller.imageTargets && ms.controller.imageTargets[0]) {
+            const target = ms.controller.imageTargets[0];
+            if (target.width && target.height) {
+              targetAspect = target.width / target.height;
+              return targetAspect;
+            }
+          }
+
+          // Fallback to image dimensions
+          if (adImg.naturalWidth > 0 && adImg.naturalHeight > 0) {
+            targetAspect = adImg.naturalWidth / adImg.naturalHeight;
+            return targetAspect;
+          }
+        } catch(e) {}
+
+        return targetAspect;
+      }
+
+      // Size the plane to match the target perfectly
+      function sizePlaneToTarget(){
+        const targetAspect = getTargetAspect();
+
+        // In MindAR, the target width is normalized to 1
+        const planeWidth = 1.0;
+        const planeHeight = planeWidth / targetAspect;
+
+        // Slightly above to avoid z-fighting
+        vPlane.setAttribute('position', '0 0 0.001');
+        vPlane.setAttribute('width', planeWidth);
+        vPlane.setAttribute('height', planeHeight);
+
+        // Apply video texture mapping
+        const videoAspect = (video.videoWidth || video.clientWidth || 16) / (video.videoHeight || video.clientHeight || 9);
+        applyCoverUV(targetAspect, videoAspect);
+      }
+
+      // Wait for all resources to be ready
+      function waitForReady(){
+        const imageReady = adImg.complete && adImg.naturalWidth > 0;
+        const videoReady = video.readyState >= 2; // HAVE_CURRENT_DATA
+
+        if (imageReady && videoReady) {
+          sizePlaneToTarget();
+        } else {
+          setTimeout(waitForReady, 100);
+        }
+      }
+
+      // Event listeners for resource loading
+      adImg.addEventListener('load', () => {
+        waitForReady();
+      });
+
+      video.addEventListener('loadeddata', () => {
+        waitForReady();
+      });
+
+      // Start checking if resources are ready
+      waitForReady();
+
+      // Handle target tracking events
+      anchor.addEventListener('targetFound', async () => {
+        hint.classList.add('hidden');
+        setStatus('Target found. Playing video.');
+
+        // Ensure plane is properly sized when target is found
+        sizePlaneToTarget();
+
+        // Start video playback
+        try {
+          await video.play();
+        } catch(e) {
+          setStatus('Tap to play video.');
+          const resume = () => {
+            video.play().catch(() => {});
+            window.removeEventListener('touchend', resume);
+            window.removeEventListener('click', resume);
+          };
+          window.addEventListener('touchend', resume, { once: true });
+          window.addEventListener('click', resume, { once: true });
+        }
+      });
+
+      anchor.addEventListener('targetLost', () => {
+        hint.classList.remove('hidden');
+        setStatus('Target lost. Point at the ad again.');
+        video.pause();
+      });
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        setStatus('Resizing…');
+        setTimeout(() => {
+          sizePlaneToTarget();
+          setStatus('Camera active. Point at the printed ad.');
+        }, 100);
+      });
+    });
+  </script>
+</body>
+</html>

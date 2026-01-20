@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebAR Ad Builder | Step 4</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./builder.css" />
+
+  <!-- MindAR + A-Frame -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    /* Step 4 preview container (builder-friendly, no overfit) */
+    .previewShell{
+      margin-top:14px;
+      border:1px dashed var(--line);
+      border-radius:14px;
+      background:#fbf8f2;
+      overflow:hidden;
+    }
+    .previewTopbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      background:#ffffff;
+      border-bottom:1px solid var(--line);
+    }
+    .modePills{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      border:1px solid var(--line);
+      background:#fbf8f2;
+      color:var(--ink);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .pill.active{
+      background:#ffffff;
+      box-shadow: 0 6px 16px rgba(18,18,18,0.06);
+    }
+
+    .previewStage{
+      position:relative;
+      width:100%;
+      aspect-ratio: 16 / 9;
+      min-height: 360px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        linear-gradient(0deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02)),
+        repeating-linear-gradient(
+          45deg,
+          rgba(0,0,0,0.03),
+          rgba(0,0,0,0.03) 10px,
+          rgba(0,0,0,0.01) 10px,
+          rgba(0,0,0,0.01) 20px
+        );
+    }
+
+    /* Simulated preview layer */
+    .simWrap{
+      width:100%;
+      height:100%;
+      display:none;
+      padding:16px;
+    }
+    .simInner{
+      width:100%;
+      height:100%;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      align-items:center;
+      justify-content:center;
+    }
+    .simCard{
+      background:#ffffff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      height:100%;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .simTitle{
+      font-weight:800;
+      font-size:12px;
+    }
+    .simMediaBox{
+      flex:1;
+      border:1px dashed var(--line);
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      background:#fbf8f2;
+    }
+    .simMediaBox img,
+    .simMediaBox video{
+      max-width:100%;
+      max-height:100%;
+      width:auto;
+      height:auto;
+      object-fit:contain;
+      display:block;
+    }
+
+    /* AR preview layer */
+    .arWrap{
+      position:absolute;
+      inset:0;
+      display:none;
+      background:#000;
+    }
+    .arHint{
+      position:absolute;
+      left:12px;
+      right:12px;
+      bottom:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      background: rgba(255,255,255,0.92);
+      border:1px solid var(--line);
+      font-size:12px;
+      color: var(--ink);
+      z-index: 5;
+    }
+
+    a-scene{
+      width:100%;
+      height:100%;
+    }
+    .arWrap a-scene{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+    .arWrap canvas{
+      width:100% !important;
+      height:100% !important;
+      display:block !important;
+    }
+
+    @media (max-width: 900px){
+      .previewStage{ min-height: 420px; aspect-ratio: 9 / 16; }
+      .simInner{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="appHeader">
+    <div class="brand">
+      <div class="brandTitle">WebAR Ad Builder</div>
+      <div class="brandSub">Build a print ad that plays video on scan</div>
+    </div>
+
+    <div class="headerMeta">
+      <span class="tag">Builder</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stepBar" aria-label="Build steps">
+      <a class="step" href="./builder.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 1</div>
+          <div class="desc">Artwork</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step2page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 2</div>
+          <div class="desc">Tracking</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step3page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 3</div>
+          <div class="desc">Video</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step4page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 4</div>
+          <div class="desc">Preview</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step5page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 5</div>
+          <div class="desc">QR</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step6page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 6</div>
+          <div class="desc">Export</div>
+        </div>
+      </a>
+    </section>
+
+    <section class="layout">
+      <!-- LEFT: readiness + navigation -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>Preview readiness</h2>
+          <p class="muted">
+            Simulated preview checks your media. AR preview checks real camera tracking.
+          </p>
+        </div>
+
+        <div class="fileMeta">
+          <div class="metaRow">
+            <span class="metaKey">Artwork</span>
+            <span id="artworkState" class="metaVal">Checking...</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Video</span>
+            <span id="videoState" class="metaVal">Checking...</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Target file</span>
+            <span id="targetState" class="metaVal">Checking...</span>
+          </div>
+        </div>
+
+        <div id="step4Status" class="status">Loading...</div>
+
+        <div class="actions">
+          <button id="backToStep3Btn" class="btn secondary">Back to Step 3</button>
+          <button id="goStep1Btn" class="btn secondary">Change artwork</button>
+        </div>
+
+        <div class="note muted">
+          Publishable version uses the real target generated in Step 2 and the video saved in Step 3.
+        </div>
+      </section>
+
+      <!-- RIGHT: preview area -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>Preview window</h2>
+          <p class="muted">
+            Use Start to request camera permissions in AR mode. Simulated mode plays your video without camera.
+          </p>
+        </div>
+
+        <div class="previewShell">
+          <div class="previewTopbar">
+            <div class="modePills">
+              <button id="simModeBtn" class="pill active" type="button">Simulated</button>
+              <button id="arModeBtn" class="pill" type="button">AR</button>
+            </div>
+
+            <div class="modePills">
+              <button id="startBtn" class="pill" type="button">Start</button>
+              <button id="stopBtn" class="pill" type="button" disabled>Stop</button>
+            </div>
+          </div>
+
+          <div class="previewStage">
+            <!-- SIMULATED -->
+            <div id="simWrap" class="simWrap">
+              <div class="simInner">
+                <div class="simCard">
+                  <div class="simTitle">Artwork</div>
+                  <div class="simMediaBox">
+                    <img id="simArtworkImg" alt="Artwork preview" />
+                  </div>
+                </div>
+
+                <div class="simCard">
+                  <div class="simTitle">Video</div>
+                  <div class="simMediaBox">
+                    <video id="simVideo" playsinline muted controls></video>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AR -->
+            <div id="arWrap" class="arWrap">
+              <div class="arHint" id="arHint">
+                Click Start, allow camera, then point at the printed image.
+              </div>
+
+              <a-scene
+                id="scene"
+                embedded
+                renderer="colorManagement: true; physicallyCorrectLights: true"
+                mindar-image="autoStart: false;"
+                vr-mode-ui="enabled: false"
+                device-orientation-permission-ui="enabled: false"
+              >
+                <a-assets>
+                  <video id="arVideo" playsinline muted loop></video>
+                </a-assets>
+
+                <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+                <a-entity id="target" mindar-image-target="targetIndex: 0">
+                  <a-video
+                    id="overlay"
+                    src="#arVideo"
+                    position="0 0 0"
+                    rotation="0 0 0"
+                    width="1"
+                    height="0.75"
+                  ></a-video>
+                </a-entity>
+              </a-scene>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="continueBtn" class="btn primary" disabled>Continue to Step 5</button>
+        </div>
+
+        <div class="note muted">
+          Step 5 will generate a QR that opens the final consumer experience page.
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="./nav.js"></script>
+  <script src="./step4page.js"></script>
+</body>
+</html>

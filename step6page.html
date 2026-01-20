@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WebAR Ad Builder | Step 6</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./builder.css" />
+</head>
+
+<body>
+  <header class="appHeader">
+    <div class="brand">
+      <div class="brandTitle">WebAR Ad Builder</div>
+      <div class="brandSub">Build a print ad that plays video on scan</div>
+    </div>
+
+    <div class="headerMeta">
+      <span class="tag">Builder</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stepBar" aria-label="Build steps">
+      <a class="step" href="./builder.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 1</div>
+          <div class="desc">Artwork</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step2page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 2</div>
+          <div class="desc">Tracking</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step3page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 3</div>
+          <div class="desc">Video</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step4page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 4</div>
+          <div class="desc">Preview</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step5page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 5</div>
+          <div class="desc">QR</div>
+        </div>
+      </a>
+
+      <a class="step" href="./step6page.html">
+        <div class="dot"></div>
+        <div class="label">
+          <div class="title">Step 6</div>
+          <div class="desc">Export</div>
+        </div>
+      </a>
+    </section>
+
+    <section class="layout">
+      <!-- LEFT: Summary -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>Final summary</h2>
+          <p class="muted">
+            Everything you need to publish is here. Your QR opens <b>experience.html</b>.
+          </p>
+        </div>
+
+        <div class="fileMeta">
+          <div class="metaRow">
+            <span class="metaKey">Artwork</span>
+            <span id="artworkState" class="metaVal">Checking...</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Video</span>
+            <span id="videoState" class="metaVal">Checking...</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Target (.mind)</span>
+            <span id="targetState" class="metaVal">Checking...</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">Experience URL</span>
+            <span id="urlState" class="metaVal">Checking...</span>
+          </div>
+          <div class="metaRow">
+            <span class="metaKey">QR</span>
+            <span id="qrState" class="metaVal">Checking...</span>
+          </div>
+        </div>
+
+        <div id="status" class="status">Loading...</div>
+
+        <div class="actions">
+          <button id="backToStep5Btn" class="btn secondary">Back to Step 5</button>
+          <button id="restartBtn" class="btn secondary">Start over</button>
+        </div>
+
+        <div class="note muted">
+          After publishing, put this QR on the printed artwork. End user flow is:
+          scan QR → camera opens → point at print → video plays on top.
+        </div>
+      </section>
+
+      <!-- RIGHT: Outputs -->
+      <section class="panel">
+        <div class="panelHead">
+          <h2>Export actions</h2>
+          <p class="muted">
+            Download the QR, copy the link, and share.
+          </p>
+        </div>
+
+        <div class="suggestWrap">
+          <h3>Recommended</h3>
+          <ul class="suggestList">
+            <li>Download the QR image</li>
+            <li>Copy the experience link</li>
+            <li>Test the QR on your phone</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <button id="downloadQrBtn" class="btn secondary" disabled>Download QR</button>
+          <button id="copyUrlBtn" class="btn primary" disabled>Copy experience URL</button>
+        </div>
+
+        <div class="suggestWrap" style="margin-top:16px;">
+          <h3>Optional</h3>
+          <ul class="suggestList">
+            <li>Download the target file (.mind) for manual setup</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <button id="downloadTargetBtn" class="btn secondary" disabled>Download target (.mind)</button>
+        </div>
+
+        <div class="note muted">
+          Target download is optional. Normal users never need it.
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- REQUIRED: dynamic active + completed step logic -->
+  <script src="./nav.js"></script>
+  <script src="./step6page.js"></script>
+</body>
+</html>
